@@ -6,22 +6,6 @@ modified by ccc
 
 ```
 $ make -f ccc/ccc.mk
-riscv64-unknown-elf-gcc -c -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -o firmware/start.o firmware/start.S
-riscv64-unknown-elf-gcc -Os -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -ffreestanding -nostdlib -o firmware/firmware.elf \
-        -Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
-        firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/stats.o  tests/mulhsu.o tests/mulh.o tests/blt.o tests/xori.o tests/j.o tests/andi.o tests/add.o tests/slti.o tests/jal.o tests/srl.o tests/lhu.o tests/ori.o tests/and.o tests/slli.o tests/sra.o tests/simple.o tests/remu.o tests/bltu.o tests/lui.o tests/sh.o tests/lb.o tests/lbu.o tests/slt.o tests/mulhu.o tests/bgeu.o tests/bne.o tests/jalr.o tests/addi.o tests/sb.o tests/auipc.o tests/beq.o tests/div.o tests/lw.o tests/rem.o tests/srli.o tests/sw.o tests/divu.o tests/mul.o tests/srai.o tests/bge.o tests/lh.o tests/sll.o tests/sub.o tests/xor.o tests/or.o  
-c:/install/sifive/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8/bin/../lib/gcc/riscv64-unknown-elf/10.2.0/../../../../riscv64-unknown-elf/bin/ld.exe: tests/simple.o: in function `.prname_done':
-(.text+0x50): undefined reference to `simple_ret'
-collect2.exe: error: ld returned 1 exit status
-make: *** [ccc/ccc.mk:118: firmware/firmware.elf] Error 1
-$ make -f ccc/ccc.mk
-riscv64-unknown-elf-gcc -Os -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -ffreestanding -nostdlib -o firmware/firmware.elf \
-        -Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
-        firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/stats.o  tests/mulhsu.o tests/mulh.o tests/blt.o tests/xori.o tests/j.o tests/andi.o tests/add.o tests/slti.o tests/jal.o tests/srl.o tests/lhu.o tests/ori.o tests/and.o tests/slli.o tests/sra.o tests/remu.o tests/bltu.o tests/lui.o tests/sh.o tests/lb.o tests/lbu.o tests/slt.o tests/mulhu.o tests/bgeu.o tests/bne.o tests/jalr.o tests/addi.o tests/sb.o tests/auipc.o tests/beq.o tests/div.o tests/lw.o tests/rem.o tests/srli.o tests/sw.o tests/divu.o tests/mul.o tests/srai.o tests/bge.o tests/lh.o tests/sll.o tests/sub.o tests/xor.o tests/or.o
-chmod -x firmware/firmware.elf
-riscv64-unknown-elf-objcopy -O binary firmware/firmware.elf firmware/firmware.bin
-chmod -x firmware/firmware.bin
-python firmware/makehex.py firmware/firmware.bin 32768 > firmware/firmware.hex
 vvp -N testbench.vvp
 hello world
 lui..OK
