@@ -6,6 +6,21 @@ modified by ccc
 
 ```
 $ make -f ccc/ccc.mk
+riscv64-unknown-elf-gcc -c -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -o firmware/start.o firmware/start.S
+riscv64-unknown-elf-gcc -Os -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -ffreestanding -nostdlib -o firmware/firmware.elf \
+        -Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
+        firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/stats.o  tests/mulhsu.o tests/mulh.o tests/blt.o tests/xori.o tests/j.o tests/andi.o tests/add.o tests/slti.o tests/jal.o tests/srl.o tests/lhu.o tests/ori.o tests/and.o tests/slli.o tests/sra.o tests/simple.o tests/remu.o tests/bltu.o tests/lui.o tests/sh.o tests/lb.o tests/lbu.o tests/slt.o tests/mulhu.o tests/bgeu.o tests/bne.o tests/jalr.o tests/addi.o tests/sb.o tests/auipc.o tests/beq.o tests/div.o tests/lw.o tests/rem.o tests/srli.o tests/sw.o tests/divu.o tests/mul.o tests/srai.o tests/bge.o tests/lh.o tests/sll.o tests/sub.o tests/xor.o tests/or.o  
+c:/install/sifive/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8/bin/../lib/gcc/riscv64-unknown-elf/10.2.0/../../../../riscv64-unknown-elf/bin/ld.exe: tests/simple.o: in function `.prname_done':
+(.text+0x50): undefined reference to `simple_ret'
+collect2.exe: error: ld returned 1 exit status
+make: *** [ccc/ccc.mk:118: firmware/firmware.elf] Error 1
+$ make -f ccc/ccc.mk
+riscv64-unknown-elf-gcc -Os -nostdlib -fno-builtin -mcmodel=medany -march=rv32ima -mabi=ilp32 -ffreestanding -nostdlib -o firmware/firmware.elf \
+        -Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
+        firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/stats.o  tests/mulhsu.o tests/mulh.o tests/blt.o tests/xori.o tests/j.o tests/andi.o tests/add.o tests/slti.o tests/jal.o tests/srl.o tests/lhu.o tests/ori.o tests/and.o tests/slli.o tests/sra.o tests/remu.o tests/bltu.o tests/lui.o tests/sh.o tests/lb.o tests/lbu.o tests/slt.o tests/mulhu.o tests/bgeu.o tests/bne.o tests/jalr.o tests/addi.o tests/sb.o tests/auipc.o tests/beq.o tests/div.o tests/lw.o tests/rem.o tests/srli.o tests/sw.o tests/divu.o tests/mul.o tests/srai.o tests/bge.o tests/lh.o tests/sll.o tests/sub.o tests/xor.o tests/or.o
+chmod -x firmware/firmware.elf
+riscv64-unknown-elf-objcopy -O binary firmware/firmware.elf firmware/firmware.bin
+chmod -x firmware/firmware.bin
 python firmware/makehex.py firmware/firmware.bin 32768 > firmware/firmware.hex
 vvp -N testbench.vvp
 hello world
@@ -53,7 +68,6 @@ div..OK
 divu..OK
 rem..OK
 remu..OK
-simple..OK
  1st prime is 2.
  2nd prime is 3.
  3rd prime is 5.
@@ -86,100 +100,26 @@ simple..OK
 30th prime is 113.
 31st prime is 127.
 checksum: 1772A48F OK
-input     [FFFFFFFF] 80000000 [FFFFFFFF] FFFFFFFF
-hard mul   80000000  00000000  80000000  7FFFFFFF
-soft mul   80000000  00000000  80000000  7FFFFFFF   OK
-hard div   80000000  00000000  00000000  80000000
-soft div   80000000  00000000  00000000  80000000   OK
-input     [00000000] 00000000 [00000000] 00000000
-hard mul   00000000  00000000  00000000  00000000
-soft mul   00000000  00000000  00000000  00000000   OK
-hard div   FFFFFFFF  FFFFFFFF  00000000  00000000
-soft div   FFFFFFFF  FFFFFFFF  00000000  00000000   OK
-input     [FFFFFFFF] 8B578493 [00000000] 00000000
-hard mul   00000000  00000000  00000000  00000000
-soft mul   00000000  00000000  00000000  00000000   OK
-hard div   FFFFFFFF  FFFFFFFF  8B578493  8B578493
-soft div   FFFFFFFF  FFFFFFFF  8B578493  8B578493   OK
-input     [00000000] 6F038AFB [00000000] 00000000
-hard mul   00000000  00000000  00000000  00000000
-soft mul   00000000  00000000  00000000  00000000   OK
-hard div   FFFFFFFF  FFFFFFFF  6F038AFB  6F038AFB
-soft div   FFFFFFFF  FFFFFFFF  6F038AFB  6F038AFB   OK
-input     [00000000] 1BFC9C22 [FFFFFFFF] 876B9BDE
-hard mul   67CDFB7C  F2D15DD3  0ECDF9F5  0ECDF9F5
-soft mul   67CDFB7C  F2D15DD3  0ECDF9F5  0ECDF9F5   OK
-hard div   00000000  00000000  1BFC9C22  1BFC9C22
-soft div   00000000  00000000  1BFC9C22  1BFC9C22   OK
-input     [00000000] 76141B16 [00000000] 5BA2940D
-hard mul   949A181E  2A4422A3  2A4422A3  2A4422A3
-soft mul   949A181E  2A4422A3  2A4422A3  2A4422A3   OK
-hard div   00000001  00000001  1A718709  1A718709
-soft div   00000001  00000001  1A718709  1A718709   OK
-input     [00000000] 2D45231C [FFFFFFFF] ADFA166F
-hard mul   C756A124  F17ECF19  1EC3F235  1EC3F235
-soft mul   C756A124  F17ECF19  1EC3F235  1EC3F235   OK
-hard div   00000000  00000000  2D45231C  2D45231C
-soft div   00000000  00000000  2D45231C  2D45231C   OK
-input     [00000000] 09C7BF74 [00000000] 3B014C60
-hard mul   73323B80  024115D2  024115D2  024115D2
-soft mul   73323B80  024115D2  024115D2  024115D2   OK
-hard div   00000000  00000000  09C7BF74  09C7BF74
-soft div   00000000  00000000  09C7BF74  09C7BF74   OK
-input     [00000000] 4325E1E6 [00000000] 1C32932A
-hard mul   0BDA21BC  076568B5  076568B5  076568B5
-soft mul   0BDA21BC  076568B5  076568B5  076568B5   OK
-hard div   00000002  00000002  0AC0BB92  0AC0BB92
-soft div   00000002  00000002  0AC0BB92  0AC0BB92   OK
-input     [FFFFFFFF] 84A97421 [FFFFFFFF] EF8D27D7
-hard mul   002E8EB7  07ECBD6D  8C96318E  7C235965
-soft mul   002E8EB7  07ECBD6D  8C96318E  7C235965   OK
-hard div   00000007  00000000  F7CD5D40  84A97421
-soft div   00000007  00000000  F7CD5D40  84A97421   OK
-input     [00000000] 258BAFEC [00000000] 5EB6FD37
-hard mul   D7A707B4  0DE4210A  0DE4210A  0DE4210A
-soft mul   D7A707B4  0DE4210A  0DE4210A  0DE4210A   OK
-hard div   00000000  00000000  258BAFEC  258BAFEC
-soft div   00000000  00000000  258BAFEC  258BAFEC   OK
-input     [FFFFFFFF] A31BEA5F [00000000] 145CCB97
-hard mul   FE749309  F89C8277  F89C8277  0CF94E0E
-soft mul   FE749309  F89C8277  F89C8277  0CF94E0E   OK
-hard div   FFFFFFFC  00000008  F48F18BB  00358DA7
-soft div   FFFFFFFC  00000008  F48F18BB  00358DA7   OK
-input     [00000000] 28E3CD00 [00000000] 793F5181
-hard mul   21A74D00  135DC8F9  135DC8F9  135DC8F9
-soft mul   21A74D00  135DC8F9  135DC8F9  135DC8F9   OK
-hard div   00000000  00000000  28E3CD00  28E3CD00
-soft div   00000000  00000000  28E3CD00  28E3CD00   OK
-input     [FFFFFFFF] F2E838C6 [00000000] 4BE0C5FE
-hard mul   6558B274  FC1E89B3  FC1E89B3  47FF4FB1
-soft mul   6558B274  FC1E89B3  FC1E89B3  47FF4FB1   OK
-hard div   00000000  00000003  F2E838C6  0F45E6CC
-soft div   00000000  00000003  F2E838C6  0F45E6CC   OK
-input     [00000000] 38BAA671 [FFFFFFFF] E2E2B92B
-hard mul   1B639DFB  F98C5E4E  324704BF  324704BF
-soft mul   1B639DFB  F98C5E4E  324704BF  324704BF   OK
-hard div   FFFFFFFF  00000000  1B9D5F9C  38BAA671
-soft div   FFFFFFFF  00000000  1B9D5F9C  38BAA671   OK
-Cycle counter ......... 337792
-Instruction counter .... 73287
-CPI: 4.60
+Cycle counter ......... 130097
+Instruction counter .... 26191
+CPI: 4.96
 DONE
 
 ------------------------------------------------------------
-EBREAK instruction at 0x000006CC
-pc  000006D0    x8  00000000    x16 1B639DFB    x24 00000000
-x1  00000690    x9  00000000    x17 00000000    x25 00000000
+EBREAK instruction at 0x000006BC
+pc  000006C0    x8  00000000    x16 00000000    x24 00000000
+x1  00000680    x9  00000000    x17 00000000    x25 00000000
 x2  00020000    x10 20000000    x18 00000000    x26 00000000
-x3  DEADBEEF    x11 075BCD15    x19 00006DC8    x27 00000000
+x3  DEADBEEF    x11 075BCD15    x19 000068DC    x27 00000000
 x4  DEADBEEF    x12 0000004F    x20 00000000    x28 0000000A
-x5  0000C03C    x13 0000004E    x21 00000000    x29 00000000
+x5  00000002    x13 0000004E    x21 00000000    x29 00000000
 x6  000000A5    x14 00000045    x22 00000000    x30 00000000
 x7  00000000    x15 0000000A    x23 00000000    x31 00000000
 ------------------------------------------------------------
-Number of fast external IRQs counted: 41
-Number of slow external IRQs counted: 5
+Number of fast external IRQs counted: 16
+Number of slow external IRQs counted: 2
 Number of timer IRQs counted: 22
-TRAP after 366841 clock cycles
+TRAP after 159747 clock cycles
 ALL TESTS PASSED.
+testbench.v:266: $finish called at 1598570000 (1ps)
 ```

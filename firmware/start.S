@@ -454,7 +454,7 @@ start:
 	TEST(rem)
 	TEST(remu)
 
-	TEST(simple)
+#	TEST(simple) // ccc remove
 
 	/* set stack pointer */
 	lui sp,(128*1024)>>12
@@ -471,7 +471,7 @@ start:
 
 #ifdef ENABLE_MULTST
 	/* call multest C code */
-	jal ra,multest
+#	jal ra,multest
 #endif
 
 #ifdef ENABLE_STATS

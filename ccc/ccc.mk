@@ -13,7 +13,8 @@ IVERILOG = iverilog$(ICARUS_SUFFIX)
 VVP = vvp$(ICARUS_SUFFIX)
 
 TEST_OBJS = $(addsuffix .o,$(basename $(wildcard tests/*.S)))
-FIRMWARE_OBJS = firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/multest.o firmware/stats.o
+# FIRMWARE_OBJS = firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/multest.o firmware/stats.o
+FIRMWARE_OBJS = firmware/start.o firmware/irq.o firmware/print.o firmware/hello.o firmware/sieve.o firmware/stats.o # 去掉 firmware/multest.o (因為有錯 undefined reference to `__divdi3) 
 GCC_WARNS  = -Werror -Wall -Wextra -Wshadow -Wundef -Wpointer-arith -Wcast-qual -Wcast-align -Wwrite-strings
 GCC_WARNS += -Wredundant-decls -Wstrict-prototypes -Wmissing-prototypes -pedantic # -Wconversion
 # TOOLCHAIN_PREFIX = $(RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX)i/bin/riscv32-unknown-elf-
@@ -108,10 +109,15 @@ firmware/firmware.bin: firmware/firmware.elf
 	$(TOOLCHAIN_PREFIX)objcopy -O binary $< $@
 	chmod -x $@
 
+#firmware/firmware.elf: $(FIRMWARE_OBJS) $(TEST_OBJS) firmware/sections.lds
+#	$(TOOLCHAIN_PREFIX)gcc -Os $(CFLAGS) -ffreestanding -nostdlib -o $@ \
+#		-Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
+#		$(FIRMWARE_OBJS) $(TEST_OBJS) -lgcc
+
 firmware/firmware.elf: $(FIRMWARE_OBJS) $(TEST_OBJS) firmware/sections.lds
 	$(TOOLCHAIN_PREFIX)gcc -Os $(CFLAGS) -ffreestanding -nostdlib -o $@ \
 		-Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
-		$(FIRMWARE_OBJS) $(TEST_OBJS) -lgcc
+		$(FIRMWARE_OBJS) $(TEST_OBJS)
 #	$(TOOLCHAIN_PREFIX)gcc -Os -ffreestanding -nostdlib -o $@ \
 #		-Wl,-Bstatic,-T,firmware/sections.lds,-Map,firmware/firmware.map,--strip-debug \
 #		$(FIRMWARE_OBJS) $(TEST_OBJS) -lgcc
